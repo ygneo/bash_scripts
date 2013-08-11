@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Converts all tables of a database to utf8_general_ci collation.
+# It creates a backup first, saved in ./<database>_backup.sql
+#
+# convutf8 <user> <database>
+#
+
+TMP_FILE_PATH='/tmp/convert_to_ut8_$2.sql'
+
+echo "Dumping database backup..."
+mysqldump -u $1 -p $2 > $2_backup.sql
+echo "Creating SQL ALTER TABLE statements"
+mysql -u $1 $2 -p -e "select concat('ALTER TABLE ', table_name, ' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;') into outfile '$TMP_FILE_PATH' lines terminated by '\r\n' from information_schema.tables where table_schema = '$2';"
+echo "Runnig SQL ALTER TABLE statements"
+mysql -u $1 -p $2 < $TMP_FILE_PATH
