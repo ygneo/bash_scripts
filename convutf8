@@ -6,7 +6,7 @@
 # convutf8 <user> <database>
 #
 
-TMP_FILE_PATH='/tmp/convert_to_ut8_$2.sql'
+TMP_FILE_PATH="/tmp/convert_to_ut8_$2.sql"
 
 echo "Dumping database backup..."
 mysqldump -u $1 -p $2 > $2_backup.sql
